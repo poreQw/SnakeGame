@@ -1272,6 +1272,7 @@
   const K_CAT = "neonSnake.cat.v1";
   const K_CHAT = "neonSnake.chatter.v1";
   const K_DPAD = "neonSnake.dpad.v1";
+  const K_LANG = "neonSnake.catLanguage.v1";
 
   const byId = (id) => document.getElementById(id);
   const scoreEl = byId("score");
@@ -1294,6 +1295,8 @@
   let catOn = load(K_CAT, "1") === "1";
   let chatter = load(K_CHAT, "normal");
   let dpadOn = load(K_DPAD, "1") === "1";
+  let assistantLanguage = load(K_LANG, "both");
+  if (!["ko", "en", "both"].includes(assistantLanguage)) assistantLanguage = "both";
   const COOLDOWN = { quiet: 15000, normal: 7000, chatty: 2500 };
 
   const CAT_IMG_FULL = "data:image/png;base64,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";
@@ -1325,7 +1328,7 @@ const CAT_IMG = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAHgAAABoCAYAAAA6s
     #catFace{cursor:grab;pointer-events:auto;touch-action:none}
     #catDock.drag #catFace{cursor:grabbing;animation:catSwing .45s ease-in-out infinite alternate}
     @keyframes catSwing{from{transform:rotate(-9deg) scale(1.06)}to{transform:rotate(9deg) scale(1.06)}}
-    #catBubble{max-width:186px;padding:7px 10px;border-radius:12px;border:1px solid rgba(34,211,238,.35);background:rgba(7,11,20,.9);color:#e2e8f0;font-size:11.5px;line-height:1.45;box-shadow:0 6px 18px rgba(0,0,0,.5);opacity:0;transform:translateY(4px);transition:opacity .2s,transform .2s}
+    #catBubble{max-width:min(240px,65vw);padding:7px 10px;border-radius:12px;border:1px solid rgba(34,211,238,.35);background:rgba(7,11,20,.9);color:#e2e8f0;font-size:11.5px;line-height:1.45;white-space:pre-line;box-shadow:0 6px 18px rgba(0,0,0,.5);opacity:0;transform:translateY(4px);transition:opacity .2s,transform .2s}
     #catBubble.on{opacity:1;transform:none}
     #catSetBtn{margin-top:10px;width:100%;border:1px solid rgba(148,163,184,.28);background:rgba(255,255,255,.06);color:#e2e8f0;font:inherit;font-size:13px;font-weight:700;padding:10px 18px;border-radius:999px;cursor:pointer}
     #catSetBtn:active{transform:scale(.97)}
@@ -1354,14 +1357,23 @@ const CAT_IMG = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAHgAAABoCAYAAAA6s
   let bubbleTimer = null;
   let faceTimer = null;
   let lastSay = 0;
+  let currentMessage = "";
+
+  function formatMessage(text) {
+    const lines = text.split("\n");
+    if (assistantLanguage === "ko") return lines[0];
+    if (assistantLanguage === "en") return lines[1] || lines[0];
+    return text;
+  }
 
   function say(text, mood, force) {
     if (!catOn) return;
     const now = performance.now();
     if (!force && now - lastSay < COOLDOWN[chatter]) return;
     lastSay = now;
+    currentMessage = text;
     dock.dataset.mood = mood || "default";
-    bubble.textContent = text;
+    bubble.textContent = formatMessage(text);
     bubble.classList.add("on");
     dock.classList.add("pop");
     clearTimeout(bubbleTimer);
@@ -1392,6 +1404,7 @@ const CAT_IMG = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAHgAAABoCAYAAAA6s
       "<p class=sub>我会陪你玩，并在关键时机提醒你。设置自动保存在本机。</p>" +
       "<div class=catRow><div><span>助手</span><small>关掉后猫咪不再出现</small></div><div class=catSeg data-set=cat></div></div>" +
       "<div class=catRow><div><span>话痨程度</span><small>提示的频率</small></div><div class=catSeg data-set=chatter></div></div>" +
+      "<div class=catRow><div><span>언어 / Language</span><small>한국어, English 또는 둘 다</small></div><div class=catSeg data-set=language></div></div>" +
       "<div class=catRow><div><span>方向键盘</span><small>屏幕下方的 D-pad</small></div><div class=catSeg data-set=dpad></div></div>" +
       "<div class=catRow><div><span>音效</span><small>等同右上角喇叭按钮</small></div><div class=catSeg data-set=sound></div></div>" +
       "<button type=button id=catClose>关闭</button>" +
@@ -1433,6 +1446,13 @@ const CAT_IMG = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAHgAAABoCAYAAAA6s
     seg(modal.querySelector("[data-set=chatter]"),
       [["quiet", "安静"], ["normal", "普通"], ["chatty", "话痨"]], chatter,
       (v) => { chatter = v; save(K_CHAT, v); });
+    seg(modal.querySelector("[data-set=language]"),
+      [["ko", "한국어"], ["en", "EN"], ["both", "둘 다"]], assistantLanguage,
+      (v) => {
+        assistantLanguage = v;
+        save(K_LANG, v);
+        if (bubble.classList.contains("on")) bubble.textContent = formatMessage(currentMessage);
+      });
     seg(modal.querySelector("[data-set=dpad]"), [["1", "显示"], ["0", "隐藏"]], dpadOn ? "1" : "0",
       (v) => { dpadOn = v === "1"; save(K_DPAD, v); applyDpad(); });
     seg(modal.querySelector("[data-set=sound]"), [["on", "开"], ["off", "关"]],
@@ -1456,18 +1476,18 @@ const CAT_IMG = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAHgAAABoCAYAAAA6s
     if (s > lastScore) {
       const gain = s - lastScore;
       const c = parseInt(String(comboEl.textContent).replace("x", ""), 10) || 1;
-      if (c >= 4) say("连击 x" + c + "！2.6 秒内接着吃就能维持", "love", true);
-      else if (gain >= 30) say("+" + gain + "，连击加成生效了", "happy");
-      if (lastScore < 80 && s >= 80) say("快到 100 分了，怪物马上登场", "shock", true);
-      if (Math.floor(lastScore / 100) < Math.floor(s / 100)) say("又多一只怪物，注意走位", "shock", true);
-      if (s >= 300) say("分数越高越快，走大圈比走小圈安全", "smug");
+      if (c >= 4) say(`연속 콤보 x${c}! 2.6초 안에 계속 먹으면 유지돼요.\nCombo x${c}! Keep eating within 2.6 seconds to keep it going.`, "love", true);
+      else if (gain >= 30) say(`콤보 보너스 +${gain}점!\nCombo bonus: +${gain} points!`, "happy");
+      if (lastScore < 80 && s >= 80) say("100점이 코앞이에요! 몬스터가 곧 나타나요.\nYou're close to 100! A monster is coming.", "shock", true);
+      if (Math.floor(lastScore / 100) < Math.floor(s / 100)) say("몬스터가 또 나타났어요. 조심해서 움직여요!\nAnother monster appeared. Watch your moves!", "shock", true);
+      if (s >= 300) say("점수가 높을수록 빨라져요. 크게 도는 게 안전해요.\nThe game gets faster as you score. Wide turns are safer.", "smug");
     }
     lastScore = s;
   }
 
   function onLevel() {
     const l = parseInt(levelEl.textContent, 10) || 1;
-    if (l > lastLevel) say("等级 " + l + "，速度提升了，别慌", "smug", true);
+    if (l > lastLevel) say(`레벨 ${l}! 속도가 빨라져요. 침착하게!\nLevel ${l}! Things are getting faster. Stay calm!`, "smug", true);
     lastLevel = l;
   }
 
@@ -1475,14 +1495,14 @@ const CAT_IMG = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAHgAAABoCAYAAAA6s
     if (overlay.hidden) return;
     const t = panel.textContent || "";
     if (t.indexOf("GAME OVER") >= 0) {
-      if (t.indexOf("신기록") >= 0) say("新纪录！你太强了 🏆", "love", true);
-      else say("没关系，再来一局。记住别绕回自己的身体", "sad", true);
+      if (t.indexOf("신기록") >= 0) say("신기록이에요! 정말 대단해요 🏆\nNew high score! You're amazing! 🏆", "love", true);
+      else say("괜찮아요. 다시 해봐요! 몸에 부딪히지 않게 조심해요.\nThat's okay. Try again! Be careful not to run into yourself.", "sad", true);
     } else if (t.indexOf("PERFECT") >= 0) {
-      say("整张图都填满了，传说级操作", "love", true);
+      say("맵을 전부 채웠어요! 전설적인 플레이예요!\nYou filled the whole board! Legendary play!", "love", true);
     } else if (t.indexOf("잠깐") >= 0) {
-      say("休息一下，我在这儿等你", "default", true);
+      say("잠깐 쉬어요. 여기서 기다릴게요.\nTake a break. I'll be right here.", "default", true);
     } else if (t.indexOf("NEON") >= 0) {
-      say("点 PLAY 开始。方向键 / WASD / 滑动都能操作", "default", true);
+      say("PLAY를 눌러 시작해요. 방향키, WASD 또는 스와이프로 움직여요.\nPress PLAY to start. Use the arrow keys, WASD, or swipe to move.", "default", true);
     }
     injectSettingsButton();
   }
@@ -1499,9 +1519,9 @@ const CAT_IMG = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAHgAAABoCAYAAAA6s
   setInterval(() => {
     if (!catOn || !overlay.hidden) return;
     const s = parseInt(scoreEl.textContent, 10) || 0;
-    if (s === 0) say("吃到 emoji 就得分，撞墙会结束哦", "default");
-    else if (s < 100) say("连吃可以叠连击，最高 x5，一次 50 分", "happy");
-    else say("贴着边走更安全，中间留给转身空间", "smug");
+    if (s === 0) say("먹이를 먹으면 점수를 얻어요. 벽에 부딪히면 게임이 끝나요.\nEat the food to score. Hitting a wall ends the game.", "default");
+    else if (s < 100) say("계속 먹으면 콤보가 쌓여요. 최대 x5, 한 번에 50점!\nKeep eating to build combos. Up to x5 and 50 points each!", "happy");
+    else say("가장자리를 따라가면 안전해요. 가운데는 방향을 바꿀 공간으로 남겨둬요.\nStay near the edge for safety. Leave the middle open for turns.", "smug");
   }, 12000);
 
   const POS_KEY = "neonSnake.catpos.v1";
@@ -1532,7 +1552,7 @@ const CAT_IMG = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAHgAAABoCAYAAAA6s
       ox = e.clientX - r.left;
       oy = e.clientY - r.top;
       faceBox.setPointerCapture(e.pointerId);
-      say("喂！别拽我！", "shock", true);
+      say("앗! 잡아당기지 마요!\nHey! Don't tug on me!", "shock", true);
       e.preventDefault();
     });
     faceBox.addEventListener("pointermove", (e) => {
@@ -1549,7 +1569,7 @@ const CAT_IMG = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAHgAAABoCAYAAAA6s
       dragging = false;
       dock.classList.remove("drag");
       save(POS_KEY, Math.round(parseFloat(dock.style.left)) + "," + Math.round(parseFloat(dock.style.top)));
-      say("呼……轻点放我下来", "smug", true);
+      say("휴……살살 내려놔 줘요.\nPhew... Put me down gently.", "smug", true);
     };
     faceBox.addEventListener("pointerup", endDrag);
     faceBox.addEventListener("pointercancel", endDrag);
