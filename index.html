@@ -1263,6 +1263,7 @@
 })();
 </script>
 
+
 <script>
 /* 🐱 猫咪助手 + 设置菜单 —— 纯附加模块，不修改原有游戏逻辑 */
 (() => {
@@ -1295,11 +1296,21 @@
   let dpadOn = load(K_DPAD, "1") === "1";
   const COOLDOWN = { quiet: 15000, normal: 7000, chatty: 2500 };
 
+  const CAT_SVG = "<svg id=catSvg viewBox=0,0,96,96 aria-hidden=true><g fill=none stroke=#20180f stroke-width=5 stroke-linecap=round stroke-linejoin=round><path d=M26,26L20,8L38,16/><path d=M58,16L76,8L70,26/><path d=M26,26C14,34,12,52,22,60C32,68,64,68,74,60C84,52,82,34,70,26C60,18,36,18,26,26Z/><path d=M30,62C26,84,32,90,48,90C64,90,70,84,66,62/><path d=M42,78L42,88/><path d=M54,78L54,88/><path d=M66,76C80,78,84,66,74,62/></g><g class=e-wink><ellipse cx=36 cy=42 rx=7 ry=9 fill=#20180f/><path d=M52,40C56,36,62,36,66,40/></g><g class=e-open><ellipse cx=36 cy=42 rx=6 ry=8 fill=#20180f/><ellipse cx=60 cy=42 rx=6 ry=8 fill=#20180f/></g><g class=e-happy><path d=M30,44C34,38,40,38,44,44/><path d=M52,44C56,38,62,38,66,44/></g><g class=e-wide><circle cx=36 cy=42 r=8 fill=#fff stroke=#20180f stroke-width=4/><circle cx=60 cy=42 r=8 fill=#fff stroke=#20180f stroke-width=4/><circle cx=36 cy=43 r=3 fill=#20180f/><circle cx=60 cy=43 r=3 fill=#20180f/></g><g class=e-sad><path d=M30,40C34,46,40,46,44,40/><path d=M52,40C56,46,62,46,66,40/><path d=M68,48C70,52,68,55,66,55C64,55,62,52,64,48Z fill=#7dd3fc stroke=none/></g><g class=m-tongue><path d=M42,52C45,55,49,55,52,52/><path d=M48,54C46,60,50,62,52,60C54,58,53,55,51,54Z fill=#f472b6 stroke=#20180f stroke-width=3/></g><g class=m-smile><path d=M40,52C45,57,53,57,58,52/></g><g class=m-open><ellipse cx=48 cy=55 rx=6 ry=7 fill=#20180f/></g><g class=m-frown><path d=M40,56C45,51,53,51,58,56/></g><g class=blush><circle cx=26 cy=50 r=4 fill=#f9a8d4 stroke=none/><circle cx=70 cy=50 r=4 fill=#f9a8d4 stroke=none/></g></svg>";
+
   const css = document.createElement("style");
   css.textContent = `
     #catDock{position:absolute;left:10px;bottom:10px;z-index:6;pointer-events:none;display:flex;align-items:flex-end;gap:6px}
-    #catFace{font-size:30px;line-height:1;filter:drop-shadow(0 0 10px rgba(34,211,238,.55));transition:transform .18s ease}
-    #catDock.pop #catFace{transform:scale(1.22) rotate(-6deg)}
+    #catFace{width:54px;height:54px;flex-shrink:0;background:#ece3d0;border-radius:14px;display:grid;place-items:center;box-shadow:0 4px 14px rgba(0,0,0,.45);transform:rotate(-3deg)}
+    #catSvg{width:46px;height:46px;display:block}
+    #catSvg .e-wink,#catSvg .e-open,#catSvg .e-happy,#catSvg .e-wide,#catSvg .e-sad,#catSvg .m-tongue,#catSvg .m-smile,#catSvg .m-open,#catSvg .m-frown,#catSvg .blush{display:none}
+    #catDock[data-mood=default] .e-wink,#catDock[data-mood=default] .m-tongue{display:inline}
+    #catDock[data-mood=happy] .e-happy,#catDock[data-mood=happy] .m-smile{display:inline}
+    #catDock[data-mood=love] .e-happy,#catDock[data-mood=love] .m-tongue,#catDock[data-mood=love] .blush{display:inline}
+    #catDock[data-mood=smug] .e-wink,#catDock[data-mood=smug] .m-smile{display:inline}
+    #catDock[data-mood=shock] .e-wide,#catDock[data-mood=shock] .m-open{display:inline}
+    #catDock[data-mood=sad] .e-sad,#catDock[data-mood=sad] .m-frown{display:inline}
+    #catDock.pop #catFace{transform:rotate(3deg) scale(1.12)}
     #catBubble{max-width:186px;padding:7px 10px;border-radius:12px;border:1px solid rgba(34,211,238,.35);background:rgba(7,11,20,.9);color:#e2e8f0;font-size:11.5px;line-height:1.45;box-shadow:0 6px 18px rgba(0,0,0,.5);opacity:0;transform:translateY(4px);transition:opacity .2s,transform .2s}
     #catBubble.on{opacity:1;transform:none}
     #catSetBtn{margin-top:10px;width:100%;border:1px solid rgba(148,163,184,.28);background:rgba(255,255,255,.06);color:#e2e8f0;font:inherit;font-size:13px;font-weight:700;padding:10px 18px;border-radius:999px;cursor:pointer}
@@ -1321,21 +1332,21 @@
 
   const dock = document.createElement("div");
   dock.id = "catDock";
-  dock.innerHTML = "<div id=catFace>😺</div><div id=catBubble></div>";
+  dock.dataset.mood = "default";
+  dock.innerHTML = "<div id=catFace>" + CAT_SVG + "</div><div id=catBubble></div>";
   stage.appendChild(dock);
-  const face = dock.querySelector("#catFace");
   const bubble = dock.querySelector("#catBubble");
 
   let bubbleTimer = null;
   let faceTimer = null;
   let lastSay = 0;
 
-  function say(text, emo, force) {
+  function say(text, mood, force) {
     if (!catOn) return;
     const now = performance.now();
     if (!force && now - lastSay < COOLDOWN[chatter]) return;
     lastSay = now;
-    face.textContent = emo || "😺";
+    dock.dataset.mood = mood || "default";
     bubble.textContent = text;
     bubble.classList.add("on");
     dock.classList.add("pop");
@@ -1344,7 +1355,7 @@
     bubbleTimer = setTimeout(() => {
       bubble.classList.remove("on");
       dock.classList.remove("pop");
-      faceTimer = setTimeout(() => { face.textContent = "😺"; }, 250);
+      faceTimer = setTimeout(() => { dock.dataset.mood = "default"; }, 250);
     }, chatter === "chatty" ? 3400 : 2600);
   }
 
@@ -1431,18 +1442,18 @@
     if (s > lastScore) {
       const gain = s - lastScore;
       const c = parseInt(String(comboEl.textContent).replace("x", ""), 10) || 1;
-      if (c >= 4) say("连击 x" + c + "！2.6 秒内接着吃就能维持", "😻", true);
-      else if (gain >= 30) say("+" + gain + "，连击加成生效了", "😸");
-      if (lastScore < 80 && s >= 80) say("快到 100 分了，怪物马上登场", "🙀", true);
-      if (Math.floor(lastScore / 100) < Math.floor(s / 100)) say("又多一只怪物，注意走位", "🙀", true);
-      if (s >= 300) say("分数越高越快，走大圈比走小圈安全", "😼");
+      if (c >= 4) say("连击 x" + c + "！2.6 秒内接着吃就能维持", "love", true);
+      else if (gain >= 30) say("+" + gain + "，连击加成生效了", "happy");
+      if (lastScore < 80 && s >= 80) say("快到 100 分了，怪物马上登场", "shock", true);
+      if (Math.floor(lastScore / 100) < Math.floor(s / 100)) say("又多一只怪物，注意走位", "shock", true);
+      if (s >= 300) say("分数越高越快，走大圈比走小圈安全", "smug");
     }
     lastScore = s;
   }
 
   function onLevel() {
     const l = parseInt(levelEl.textContent, 10) || 1;
-    if (l > lastLevel) say("等级 " + l + "，速度提升了，别慌", "😼", true);
+    if (l > lastLevel) say("等级 " + l + "，速度提升了，别慌", "smug", true);
     lastLevel = l;
   }
 
@@ -1450,14 +1461,14 @@
     if (overlay.hidden) return;
     const t = panel.textContent || "";
     if (t.indexOf("GAME OVER") >= 0) {
-      if (t.indexOf("신기록") >= 0) say("新纪录！你太强了 🏆", "😻", true);
-      else say("没关系，再来一局。记住别绕回自己的身体", "😿", true);
+      if (t.indexOf("신기록") >= 0) say("新纪录！你太强了 🏆", "love", true);
+      else say("没关系，再来一局。记住别绕回自己的身体", "sad", true);
     } else if (t.indexOf("PERFECT") >= 0) {
-      say("整张图都填满了，传说级操作", "😻", true);
+      say("整张图都填满了，传说级操作", "love", true);
     } else if (t.indexOf("잠깐") >= 0) {
-      say("休息一下，我在这儿等你", "😺", true);
+      say("休息一下，我在这儿等你", "default", true);
     } else if (t.indexOf("NEON") >= 0) {
-      say("点 PLAY 开始。方向键 / WASD / 滑动都能操作", "😺", true);
+      say("点 PLAY 开始。方向键 / WASD / 滑动都能操作", "default", true);
     }
     injectSettingsButton();
   }
@@ -1474,9 +1485,9 @@
   setInterval(() => {
     if (!catOn || !overlay.hidden) return;
     const s = parseInt(scoreEl.textContent, 10) || 0;
-    if (s === 0) say("吃到 emoji 就得分，撞墙会结束哦", "😺");
-    else if (s < 100) say("连吃可以叠连击，最高 x5，一次 50 分", "😸");
-    else say("贴着边走更安全，中间留给转身空间", "😼");
+    if (s === 0) say("吃到 emoji 就得分，撞墙会结束哦", "default");
+    else if (s < 100) say("连吃可以叠连击，最高 x5，一次 50 分", "happy");
+    else say("贴着边走更安全，中间留给转身空间", "smug");
   }, 12000);
 
   applyCat();
