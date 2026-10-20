@@ -1262,5 +1262,228 @@
   requestAnimationFrame(loop);
 })();
 </script>
+
+<script>
+/* 🐱 猫咪助手 + 设置菜单 —— 纯附加模块，不修改原有游戏逻辑 */
+(() => {
+  "use strict";
+
+  const K_CAT = "neonSnake.cat.v1";
+  const K_CHAT = "neonSnake.chatter.v1";
+  const K_DPAD = "neonSnake.dpad.v1";
+
+  const byId = (id) => document.getElementById(id);
+  const scoreEl = byId("score");
+  const comboEl = byId("combo");
+  const levelEl = byId("level");
+  const overlay = byId("overlay");
+  const panel = byId("panel");
+  const stage = byId("stage");
+  const muteBtn = byId("muteBtn");
+  const dpad = document.querySelector(".dpad");
+  if (!scoreEl || !overlay || !panel || !stage) return;
+
+  const load = (k, fb) => {
+    try { const v = localStorage.getItem(k); return v === null ? fb : v; } catch (e) { return fb; }
+  };
+  const save = (k, v) => {
+    try { localStorage.setItem(k, v); } catch (e) { /* storage unavailable */ }
+  };
+
+  let catOn = load(K_CAT, "1") === "1";
+  let chatter = load(K_CHAT, "normal");
+  let dpadOn = load(K_DPAD, "1") === "1";
+  const COOLDOWN = { quiet: 15000, normal: 7000, chatty: 2500 };
+
+  const css = document.createElement("style");
+  css.textContent = `
+    #catDock{position:absolute;left:10px;bottom:10px;z-index:6;pointer-events:none;display:flex;align-items:flex-end;gap:6px}
+    #catFace{font-size:30px;line-height:1;filter:drop-shadow(0 0 10px rgba(34,211,238,.55));transition:transform .18s ease}
+    #catDock.pop #catFace{transform:scale(1.22) rotate(-6deg)}
+    #catBubble{max-width:186px;padding:7px 10px;border-radius:12px;border:1px solid rgba(34,211,238,.35);background:rgba(7,11,20,.9);color:#e2e8f0;font-size:11.5px;line-height:1.45;box-shadow:0 6px 18px rgba(0,0,0,.5);opacity:0;transform:translateY(4px);transition:opacity .2s,transform .2s}
+    #catBubble.on{opacity:1;transform:none}
+    #catSetBtn{margin-top:10px;width:100%;border:1px solid rgba(148,163,184,.28);background:rgba(255,255,255,.06);color:#e2e8f0;font:inherit;font-size:13px;font-weight:700;padding:10px 18px;border-radius:999px;cursor:pointer}
+    #catSetBtn:active{transform:scale(.97)}
+    #catModal{position:fixed;inset:0;z-index:50;display:grid;place-items:center;padding:20px;background:rgba(6,10,18,.72);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+    #catModal[hidden]{display:none}
+    #catCard{width:100%;max-width:330px;border-radius:22px;padding:20px;border:1px solid rgba(148,163,184,.2);background:#0b1220;box-shadow:0 26px 60px rgba(0,0,0,.6)}
+    #catCard h3{margin:0 0 4px;font-size:19px;font-weight:900;color:#e2e8f0}
+    #catCard .sub{margin:0 0 14px;font-size:11.5px;color:#94a3b8;line-height:1.5}
+    .catRow{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 0;border-top:1px solid rgba(148,163,184,.14)}
+    .catRow span{font-size:13px;font-weight:600;color:#e2e8f0}
+    .catRow small{display:block;font-size:10.5px;color:#94a3b8;font-weight:400;margin-top:2px}
+    .catSeg{display:flex;gap:4px;flex-shrink:0}
+    .catSeg button{border:1px solid rgba(148,163,184,.24);background:rgba(255,255,255,.05);color:#94a3b8;font:inherit;font-size:11.5px;font-weight:700;padding:6px 10px;border-radius:9px;cursor:pointer}
+    .catSeg button.sel{background:linear-gradient(100deg,#a3e635,#22d3ee);color:#07110a;border-color:transparent}
+    #catClose{margin-top:16px;width:100%;border:0;cursor:pointer;font:inherit;font-weight:800;font-size:14px;color:#07110a;padding:12px;border-radius:999px;background:linear-gradient(100deg,#a3e635,#22d3ee)}
+  `;
+  document.head.appendChild(css);
+
+  const dock = document.createElement("div");
+  dock.id = "catDock";
+  dock.innerHTML = "<div id=catFace>😺</div><div id=catBubble></div>";
+  stage.appendChild(dock);
+  const face = dock.querySelector("#catFace");
+  const bubble = dock.querySelector("#catBubble");
+
+  let bubbleTimer = null;
+  let faceTimer = null;
+  let lastSay = 0;
+
+  function say(text, emo, force) {
+    if (!catOn) return;
+    const now = performance.now();
+    if (!force && now - lastSay < COOLDOWN[chatter]) return;
+    lastSay = now;
+    face.textContent = emo || "😺";
+    bubble.textContent = text;
+    bubble.classList.add("on");
+    dock.classList.add("pop");
+    clearTimeout(bubbleTimer);
+    clearTimeout(faceTimer);
+    bubbleTimer = setTimeout(() => {
+      bubble.classList.remove("on");
+      dock.classList.remove("pop");
+      faceTimer = setTimeout(() => { face.textContent = "😺"; }, 250);
+    }, chatter === "chatty" ? 3400 : 2600);
+  }
+
+  function injectSettingsButton() {
+    if (!panel.isConnected || panel.querySelector("#catSetBtn")) return;
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.id = "catSetBtn";
+    btn.textContent = "🐱 猫咪助手 / 设置";
+    btn.addEventListener("click", openSettings);
+    panel.appendChild(btn);
+  }
+
+  const modal = document.createElement("div");
+  modal.id = "catModal";
+  modal.hidden = true;
+  modal.innerHTML =
+    "<div id=catCard>" +
+      "<h3>🐱 猫咪助手</h3>" +
+      "<p class=sub>我会陪你玩，并在关键时机提醒你。设置自动保存在本机。</p>" +
+      "<div class=catRow><div><span>助手</span><small>关掉后猫咪不再出现</small></div><div class=catSeg data-set=cat></div></div>" +
+      "<div class=catRow><div><span>话痨程度</span><small>提示的频率</small></div><div class=catSeg data-set=chatter></div></div>" +
+      "<div class=catRow><div><span>方向键盘</span><small>屏幕下方的 D-pad</small></div><div class=catSeg data-set=dpad></div></div>" +
+      "<div class=catRow><div><span>音效</span><small>等同右上角喇叭按钮</small></div><div class=catSeg data-set=sound></div></div>" +
+      "<button type=button id=catClose>关闭</button>" +
+    "</div>";
+  document.body.appendChild(modal);
+
+  const isMuted = () => (muteBtn ? muteBtn.textContent.trim() === "🔇" : false);
+
+  function seg(host, items, current, onPick) {
+    if (!host) return;
+    host.innerHTML = "";
+    items.forEach((it) => {
+      const b = document.createElement("button");
+      b.type = "button";
+      b.textContent = it[1];
+      if (it[0] === current) b.classList.add("sel");
+      b.addEventListener("click", () => { onPick(it[0]); renderSettings(); });
+      host.appendChild(b);
+    });
+  }
+
+  function applyCat() {
+    if (!catOn) {
+      clearTimeout(bubbleTimer);
+      clearTimeout(faceTimer);
+      bubble.classList.remove("on");
+      dock.classList.remove("pop");
+    }
+    dock.style.display = catOn ? "" : "none";
+  }
+
+  function applyDpad() {
+    if (dpad) dpad.style.display = dpadOn ? "" : "none";
+  }
+
+  function renderSettings() {
+    seg(modal.querySelector("[data-set=cat]"), [["1", "开"], ["0", "关"]], catOn ? "1" : "0",
+      (v) => { catOn = v === "1"; save(K_CAT, v); applyCat(); });
+    seg(modal.querySelector("[data-set=chatter]"),
+      [["quiet", "安静"], ["normal", "普通"], ["chatty", "话痨"]], chatter,
+      (v) => { chatter = v; save(K_CHAT, v); });
+    seg(modal.querySelector("[data-set=dpad]"), [["1", "显示"], ["0", "隐藏"]], dpadOn ? "1" : "0",
+      (v) => { dpadOn = v === "1"; save(K_DPAD, v); applyDpad(); });
+    seg(modal.querySelector("[data-set=sound]"), [["on", "开"], ["off", "关"]],
+      isMuted() ? "off" : "on", () => { if (muteBtn) muteBtn.click(); });
+  }
+
+  function openSettings() { renderSettings(); modal.hidden = false; }
+  function closeSettings() { modal.hidden = true; }
+
+  modal.querySelector("#catClose").addEventListener("click", closeSettings);
+  modal.addEventListener("pointerdown", (e) => { if (e.target === modal) closeSettings(); });
+  window.addEventListener("keydown", (e) => {
+    if (!modal.hidden && e.key === "Escape") { e.stopPropagation(); closeSettings(); }
+  }, true);
+
+  let lastScore = parseInt(scoreEl.textContent, 10) || 0;
+  let lastLevel = parseInt(levelEl.textContent, 10) || 1;
+
+  function onScore() {
+    const s = parseInt(scoreEl.textContent, 10) || 0;
+    if (s > lastScore) {
+      const gain = s - lastScore;
+      const c = parseInt(String(comboEl.textContent).replace("x", ""), 10) || 1;
+      if (c >= 4) say("连击 x" + c + "！2.6 秒内接着吃就能维持", "😻", true);
+      else if (gain >= 30) say("+" + gain + "，连击加成生效了", "😸");
+      if (lastScore < 80 && s >= 80) say("快到 100 分了，怪物马上登场", "🙀", true);
+      if (Math.floor(lastScore / 100) < Math.floor(s / 100)) say("又多一只怪物，注意走位", "🙀", true);
+      if (s >= 300) say("分数越高越快，走大圈比走小圈安全", "😼");
+    }
+    lastScore = s;
+  }
+
+  function onLevel() {
+    const l = parseInt(levelEl.textContent, 10) || 1;
+    if (l > lastLevel) say("等级 " + l + "，速度提升了，别慌", "😼", true);
+    lastLevel = l;
+  }
+
+  function onOverlay() {
+    if (overlay.hidden) return;
+    const t = panel.textContent || "";
+    if (t.indexOf("GAME OVER") >= 0) {
+      if (t.indexOf("신기록") >= 0) say("新纪录！你太强了 🏆", "😻", true);
+      else say("没关系，再来一局。记住别绕回自己的身体", "😿", true);
+    } else if (t.indexOf("PERFECT") >= 0) {
+      say("整张图都填满了，传说级操作", "😻", true);
+    } else if (t.indexOf("잠깐") >= 0) {
+      say("休息一下，我在这儿等你", "😺", true);
+    } else if (t.indexOf("NEON") >= 0) {
+      say("点 PLAY 开始。方向键 / WASD / 滑动都能操作", "😺", true);
+    }
+    injectSettingsButton();
+  }
+
+  new MutationObserver(() => { onScore(); onLevel(); })
+    .observe(scoreEl, { childList: true, characterData: true, subtree: true });
+  new MutationObserver(() => { onLevel(); })
+    .observe(levelEl, { childList: true, characterData: true, subtree: true });
+  new MutationObserver(onOverlay)
+    .observe(overlay, { attributes: true, attributeFilter: ["hidden"] });
+  new MutationObserver(injectSettingsButton)
+    .observe(panel, { childList: true });
+
+  setInterval(() => {
+    if (!catOn || !overlay.hidden) return;
+    const s = parseInt(scoreEl.textContent, 10) || 0;
+    if (s === 0) say("吃到 emoji 就得分，撞墙会结束哦", "😺");
+    else if (s < 100) say("连吃可以叠连击，最高 x5，一次 50 分", "😸");
+    else say("贴着边走更安全，中间留给转身空间", "😼");
+  }, 12000);
+
+  applyCat();
+  applyDpad();
+  onOverlay();
+  injectSettingsButton();
+})();
+</script>
 </body>
 </html>
