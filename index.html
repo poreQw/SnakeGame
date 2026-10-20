@@ -1304,7 +1304,9 @@
     #catFace{width:54px;height:54px;flex-shrink:0;background:#ece3d0;border-radius:14px;display:grid;place-items:center;box-shadow:0 4px 14px rgba(0,0,0,.45);transform:rotate(-3deg)}
     #catSvg{width:46px;height:46px;display:block}
     #catSvg .e-wink,#catSvg .e-open,#catSvg .e-happy,#catSvg .e-wide,#catSvg .e-sad,#catSvg .m-tongue,#catSvg .m-smile,#catSvg .m-open,#catSvg .m-frown,#catSvg .blush{display:none}
-    #catDock[data-mood=default] .e-wink,#catDock[data-mood=default] .m-tongue{display:inline}
+    #catSvg .e-wink,#catSvg .m-tongue{display:inline}
+    #catDock[data-mood=happy] .e-wink,#catDock[data-mood=love] .e-wink,#catDock[data-mood=shock] .e-wink,#catDock[data-mood=sad] .e-wink{display:none}
+    #catDock[data-mood=happy] .m-tongue,#catDock[data-mood=smug] .m-tongue,#catDock[data-mood=shock] .m-tongue,#catDock[data-mood=sad] .m-tongue{display:none}
     #catDock[data-mood=happy] .e-happy,#catDock[data-mood=happy] .m-smile{display:inline}
     #catDock[data-mood=love] .e-happy,#catDock[data-mood=love] .m-tongue,#catDock[data-mood=love] .blush{display:inline}
     #catDock[data-mood=smug] .e-wink,#catDock[data-mood=smug] .m-smile{display:inline}
