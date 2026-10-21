@@ -58,6 +58,29 @@
     flex-direction: column;
     gap: 14px;
   }
+  @keyframes enter-rise {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes enter-fade {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  @keyframes enter-zoom {
+    from { opacity: 0; transform: scale(.94); }
+    to { opacity: 1; transform: scale(1); }
+  }
+  h1 { animation: enter-rise .55s cubic-bezier(.2, 1, .35, 1) both; }
+  .tag { animation: enter-fade .45s ease .24s both; }
+  .tools { animation: enter-fade .45s ease .2s both; }
+  .stat { animation: enter-rise .45s cubic-bezier(.2, 1, .35, 1) both; }
+  .stat:nth-child(1) { animation-delay: .12s; }
+  .stat:nth-child(2) { animation-delay: .2s; }
+  .stat:nth-child(3) { animation-delay: .28s; }
+  .stat:nth-child(4) { animation-delay: .36s; }
+  .stage { animation: enter-zoom .55s cubic-bezier(.2, 1, .35, 1) .25s backwards; }
+  .hint { animation: enter-fade .45s ease .5s both; }
+  .dpad { animation: enter-rise .45s cubic-bezier(.2, 1, .35, 1) .45s both; }
 
   .top {
     display: flex;
@@ -223,6 +246,28 @@
     font-size: 11px;
     color: rgba(148, 163, 184, .75);
   }
+  .panel .btn.secondary {
+    margin-top: 10px;
+    border: 1px solid rgba(148, 163, 184, .24);
+    color: #cbd5e1;
+    background: rgba(255, 255, 255, .06);
+    box-shadow: none;
+  }
+  .panel .tutorial-progress {
+    margin: 0 0 8px;
+    color: #a3e635;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: .12em;
+  }
+  .panel .tutorial-actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+  }
+  .panel .tutorial-actions .btn { padding: 11px 20px; }
+  .panel .tutorial-actions .btn.secondary { margin-top: 0; }
   .panel .new-record {
     margin: -4px 0 16px;
     color: #a3e635;
@@ -230,6 +275,72 @@
     font-size: 15px;
     text-shadow: 0 0 16px rgba(163, 230, 53, .5);
   }
+  .panel .intro-list {
+    display: grid;
+    gap: 7px;
+    margin: 0 0 14px;
+    padding: 0;
+    list-style: none;
+    text-align: left;
+  }
+  .panel .intro-list li {
+    padding: 8px 12px;
+    border-radius: 12px;
+    border: 1px solid rgba(148, 163, 184, .14);
+    background: rgba(255, 255, 255, .045);
+  }
+  .panel .intro-list b {
+    display: block;
+    font-size: 12.5px;
+    color: #e2e8f0;
+  }
+  .panel .intro-list span {
+    display: block;
+    margin-top: 2px;
+    font-size: 11.5px;
+    line-height: 1.5;
+    color: #94a3b8;
+  }
+  .panel .intro-keys {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 6px;
+    margin: 0 0 16px;
+  }
+  .panel .intro-keys kbd {
+    font: inherit;
+    font-size: 11px;
+    font-weight: 700;
+    color: #22d3ee;
+    padding: 3px 9px;
+    border-radius: 7px;
+    border: 1px solid rgba(34, 211, 238, .28);
+    background: rgba(34, 211, 238, .08);
+  }
+  .panel.intro .panel-emoji {
+    font-size: 34px;
+    margin-bottom: 3px;
+  }
+  .panel.intro h2 {
+    font-size: clamp(20px, 5.4vw, 25px);
+    margin-bottom: 6px;
+  }
+  .panel.intro p {
+    margin-bottom: 12px;
+    font-size: 12.5px;
+  }
+  .panel.intro .intro-list {
+    gap: 5px;
+    margin-bottom: 12px;
+  }
+  .panel.intro .intro-list li { padding: 6px 10px; }
+  .panel.intro .intro-keys { margin-bottom: 12px; }
+  .panel.intro .small { margin-top: 9px; }
+  .panel.intro .intro-list li { animation: enter-rise .35s ease both; }
+  .panel.intro .intro-list li:nth-child(1) { animation-delay: .12s; }
+  .panel.intro .intro-list li:nth-child(2) { animation-delay: .22s; }
+  .panel.intro .intro-list li:nth-child(3) { animation-delay: .32s; }
   .btn {
     border: 0;
     cursor: pointer;
@@ -315,6 +426,114 @@
   .dpad-btn[data-dir="down"] { grid-area: down; }
   .dpad-btn[data-dir="right"] { grid-area: right; }
 
+  .project-ppt-link {
+    position: fixed;
+    left: max(14px, env(safe-area-inset-left));
+    bottom: max(14px, env(safe-area-inset-bottom));
+    z-index: 39;
+    display: grid;
+    width: 46px;
+    height: 46px;
+    place-items: center;
+    border: 1px solid rgba(34, 211, 238, .4);
+    border-radius: 50%;
+    background: linear-gradient(145deg, rgba(163, 230, 53, .2), rgba(34, 211, 238, .18));
+    box-shadow: 0 8px 24px rgba(0, 0, 0, .4), 0 0 18px rgba(34, 211, 238, .14);
+    color: #e2e8f0;
+    font-size: 20px;
+    text-decoration: none;
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
+    transition: transform .15s ease, background .15s ease, border-color .15s ease;
+  }
+  .project-ppt-link:hover {
+    transform: translateY(-2px);
+    border-color: rgba(34, 211, 238, .75);
+    background: linear-gradient(145deg, rgba(163, 230, 53, .32), rgba(34, 211, 238, .3));
+  }
+  .project-ppt-link:active { transform: scale(.94); }
+
+  .ppt-viewer[hidden] { display: none; }
+  .ppt-viewer {
+    position: fixed;
+    inset: 0;
+    z-index: 60;
+    display: grid;
+    place-items: center;
+    padding: 18px;
+    background: rgba(3, 7, 14, .82);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+  }
+  .ppt-window {
+    display: flex;
+    flex-direction: column;
+    width: min(900px, 100%);
+    max-height: min(760px, calc(100dvh - 36px));
+    overflow: hidden;
+    border: 1px solid rgba(34, 211, 238, .28);
+    border-radius: 24px;
+    background: #080e19;
+    box-shadow: 0 28px 90px rgba(0, 0, 0, .65), 0 0 42px rgba(34, 211, 238, .08);
+  }
+  .ppt-toolbar, .ppt-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 13px 18px;
+    border-bottom: 1px solid rgba(148, 163, 184, .13);
+  }
+  .ppt-toolbar strong { color: #e2e8f0; font-size: 13px; }
+  .ppt-toolbar button, .ppt-footer button, .ppt-footer a {
+    border: 1px solid rgba(148, 163, 184, .24);
+    border-radius: 10px;
+    padding: 8px 12px;
+    background: rgba(255, 255, 255, .05);
+    color: #cbd5e1;
+    font: inherit;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    text-decoration: none;
+  }
+  .ppt-toolbar button:hover, .ppt-footer button:hover, .ppt-footer a:hover { background: rgba(255, 255, 255, .1); }
+  .ppt-content { overflow: auto; padding: clamp(18px, 4vw, 34px); }
+  .ppt-slide-label { margin: 0 0 8px; color: #a3e635; font-size: 11px; font-weight: 800; letter-spacing: .13em; }
+  .ppt-content h2 { margin: 0; color: #e2e8f0; font-size: clamp(24px, 5vw, 38px); line-height: 1.15; }
+  .ppt-subtitle { margin: 10px 0 22px; color: #94a3b8; font-size: 14px; line-height: 1.6; }
+  .ppt-reveals { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+  .ppt-item {
+    min-width: 0;
+    padding: 16px;
+    border: 1px solid rgba(148, 163, 184, .14);
+    border-radius: 16px;
+    background: linear-gradient(145deg, rgba(255, 255, 255, .055), rgba(255, 255, 255, .02));
+    animation: enter-rise .3s ease both;
+  }
+  .ppt-item strong { display: block; margin-bottom: 6px; color: #22d3ee; font-size: 14px; }
+  .ppt-item p { margin: 0; color: #cbd5e1; font-size: 12px; line-height: 1.65; white-space: pre-line; }
+  .ppt-item .ppt-emoji { margin-bottom: 6px; font-size: 20px; }
+  .ppt-reveals .ppt-item:first-child:last-child { grid-column: 1 / -1; }
+  .ppt-footer { border-top: 1px solid rgba(148, 163, 184, .13); border-bottom: 0; }
+  .ppt-progress { color: #94a3b8; font-size: 11px; white-space: nowrap; }
+  .ppt-controls { display: flex; gap: 8px; }
+  .ppt-footer button.primary {
+    border-color: transparent;
+    background: linear-gradient(100deg, #a3e635, #22d3ee);
+    color: #07110a;
+  }
+  .ppt-footer button:disabled { opacity: .38; cursor: default; }
+  @media (max-width: 560px) {
+    .ppt-viewer { padding: 10px; }
+    .ppt-window { max-height: calc(100dvh - 20px); border-radius: 18px; }
+    .ppt-toolbar, .ppt-footer { padding: 10px 12px; }
+    .ppt-toolbar strong { font-size: 11px; }
+    .ppt-reveals { grid-template-columns: 1fr; }
+    .ppt-item { padding: 13px; }
+    .ppt-progress { font-size: 10px; }
+  }
+
   @media (pointer: coarse), (hover: none) {
     .dpad { display: grid; }
     .hint { display: none; }
@@ -365,6 +584,24 @@
     <button type="button" class="dpad-btn" data-dir="right" aria-label="오른쪽">▶</button>
   </div>
 </main>
+<button class="project-ppt-link" id="projectPptButton" type="button" aria-haspopup="dialog" aria-controls="pptViewer" aria-label="NEON SNAKE 프로젝트 소개 보기" title="프로젝트 소개 보기">📘</button>
+<section class="ppt-viewer" id="pptViewer" role="dialog" aria-modal="true" aria-labelledby="pptViewerTitle" hidden>
+  <div class="ppt-window">
+    <header class="ppt-toolbar">
+      <strong id="pptViewerTitle">NEON SNAKE · 프로젝트 소개</strong>
+      <button type="button" id="pptCloseButton" aria-label="소개 닫기">닫기 ✕</button>
+    </header>
+    <div class="ppt-content" id="pptContent" aria-live="polite"></div>
+    <footer class="ppt-footer">
+      <span class="ppt-progress" id="pptProgress" aria-live="polite"></span>
+      <div class="ppt-controls">
+        <a href="./NEON_SNAKE_한국어_한장씩_클릭공개.pptx" download>원본 PPT 다운로드</a>
+        <button type="button" id="pptPrevButton">이전</button>
+        <button class="primary" type="button" id="pptNextButton">다음 ▶</button>
+      </div>
+    </footer>
+  </div>
+</section>
 
 <script>
 (() => {
@@ -398,6 +635,7 @@
 
   const STORE_BEST = 'neonSnake.best.v1';
   const STORE_MUTE = 'neonSnake.muted.v1';
+  const STORE_INTRO = 'neonSnake.introSeen.v1';
 
   const canvas = document.getElementById('game');
   const ctx = canvas.getContext('2d');
@@ -434,6 +672,35 @@
   let overTimeout = null;
   let audioCtx = null;
   let swipe = null;
+  let tutorialStep = 0;
+  let tutorialReturnState = 'menu';
+
+  const TUTORIAL_STEPS = [
+    {
+      emoji: '🎮',
+      title: '뱀을 움직여요',
+      text: '방향키나 WASD를 눌러 이동하세요. 휴대폰에서는 화면을 밀거나 아래 방향 패드를 누르면 됩니다.',
+      tip: 'Space 또는 P를 누르면 잠시 멈출 수 있어요.'
+    },
+    {
+      emoji: '🍩',
+      title: '먹이를 찾아가요',
+      text: '네온 먹이를 먹으면 기본 10점을 얻고 몸이 한 칸 길어집니다. 화면의 점수와 레벨도 함께 올라가요.',
+      tip: '먹이를 향해 안전한 경로로 움직여 보세요.'
+    },
+    {
+      emoji: '⚡',
+      title: '빠르게 먹어 콤보!',
+      text: '먹이를 먹은 뒤 2.6초 안에 다음 먹이를 먹으면 콤보가 이어집니다. 배수는 최대 x5, 한 번에 최대 50점이에요.',
+      tip: '콤보 표시가 뜨면 시간을 놓치지 말고 다음 먹이를 찾아요.'
+    },
+    {
+      emoji: '👾',
+      title: '벽과 몬스터를 조심해요',
+      text: '100점부터 몬스터가 나타나고 점수가 100점 오를 때마다 추가됩니다(최대 3마리). 몸이나 몬스터에 부딪히면 몸이 줄고, 벽에 부딪히면 게임이 끝나요.',
+      tip: '막다른 곳에 갇히지 않도록 미리 방향을 정해 주세요.'
+    }
+  ];
 
   function readStore(key, fallback) {
     try {
@@ -531,7 +798,9 @@
     muteBtn.classList.toggle('off', muted);
   }
 
-  function setPanel(html) {
+  function setPanel(html, kind) {
+    panel.className = 'panel' + (kind === 'intro' ? ' intro' : '') + (kind === 'tutorial' ? ' tutorial' : '');
+    panel.dataset.tutorial = kind === 'tutorial' ? 'true' : 'false';
     panel.innerHTML = html;
     panel.classList.remove('in');
     void panel.offsetWidth;
@@ -542,13 +811,46 @@
     const info = data || {};
     let html = '';
 
-    if (kind === 'menu') {
+    if (kind === 'intro') {
+      html = `
+        <div class="panel-emoji">🐍</div>
+        <h2>안녕, 나는 <span class="grad">NEON SNAKE</span>!</h2>
+        <p>네온 보드 위에서 사탕을 먹으며 자라는 뱀이야.<br>콤보를 이어서 최고 점수에 도전해 볼래?</p>
+        <ul class="intro-list" data-intro>
+          <li><b>🍩 먹고 자라기</b><span>사탕을 먹으면 기본 점수 +10, 몸길이 +1</span></li>
+          <li><b>⚡ 콤보 x5</b><span>2.6초 안에 연속으로 먹으면 최대 50점</span></li>
+          <li><b>👾 몬스터</b><span>100점부터 등장, 부딪히면 몸이 한 칸 줄어요</span></li>
+        </ul>
+        <div class="intro-keys" aria-label="조작키">
+          <kbd>← ↑ ↓ →</kbd><kbd>WASD</kbd><kbd>스와이프</kbd><kbd>Space</kbd>
+        </div>
+        <button class="btn" type="button" data-action="start">좋아, 시작할게 ▶</button>
+        <button class="btn secondary" type="button" data-action="tutorial-open">게임 방법 배우기</button>
+        <p class="small">Space / Enter 로도 시작 · 이 소개는 처음 한 번만 보여</p>`;
+    } else if (kind === 'menu') {
       html = `
         <div class="panel-emoji">🐍</div>
         <h2>NEON <span class="grad">SNAKE</span></h2>
         <p>네온 사탕을 먹고 <b>콤보</b>를 터뜨려 봐!<br>100점부터 몬스터 등장! 부딪히면 한 칸 줄어드니 피해야 해.</p>
         <button class="btn" type="button" data-action="start">PLAY ▶</button>
+        <button class="btn secondary" type="button" data-action="tutorial-open">게임 방법 배우기</button>
         <p class="small">Space / Enter 로도 시작할 수 있어</p>`;
+    } else if (kind === 'tutorial') {
+      const step = TUTORIAL_STEPS[tutorialStep];
+      html = `
+        <div class="panel-emoji">${step.emoji}</div>
+        <p class="tutorial-progress">게임 방법 · ${tutorialStep + 1} / ${TUTORIAL_STEPS.length}</p>
+        <h2>${step.title}</h2>
+        <p>${step.text}</p>
+        <p class="small">${step.tip}</p>
+        <div class="tutorial-actions">
+          ${tutorialStep > 0 ? '<button class="btn secondary" type="button" data-action="tutorial-prev">이전</button>' : ''}
+          ${tutorialStep < TUTORIAL_STEPS.length - 1
+            ? '<button class="btn" type="button" data-action="tutorial-next">다음 ▶</button>'
+            : '<button class="btn" type="button" data-action="start">연습 끝! 플레이 시작 ▶</button>'}
+          <button class="btn secondary" type="button" data-action="tutorial-exit">돌아가기</button>
+        </div>
+        <p class="small">Space / Enter: 다음 단계 · Esc: 돌아가기</p>`;
     } else if (kind === 'pause') {
       html = `
         <div class="panel-emoji">⏸️</div>
@@ -581,13 +883,28 @@
         <button class="btn" type="button" data-action="start">한 번 더 ↻</button>`;
     }
 
-    setPanel(html);
+    setPanel(html, kind);
     overlay.hidden = false;
     updateControls();
   }
 
   function hideOverlay() {
     overlay.hidden = true;
+  }
+
+  function openTutorial() {
+    tutorialReturnState = state === 'intro' ? 'intro' : 'menu';
+    tutorialStep = 0;
+    showOverlay('tutorial');
+  }
+
+  function advanceTutorial(direction) {
+    tutorialStep = Math.max(0, Math.min(TUTORIAL_STEPS.length - 1, tutorialStep + direction));
+    showOverlay('tutorial');
+  }
+
+  function exitTutorial() {
+    showOverlay(tutorialReturnState);
   }
 
   function spawnFood() {
@@ -711,6 +1028,7 @@
 
   function startGame() {
     clearTimeout(overTimeout);
+    if (state === 'intro') writeStore(STORE_INTRO, '1');
     resetRun();
     state = 'playing';
     lastFrame = performance.now();
@@ -1184,13 +1502,21 @@
     if (key === ' ' || key === 'Spacebar' || key === 'Enter') {
       e.preventDefault();
       if (e.repeat) return;
-      if (state === 'menu' || state === 'over' || state === 'won') startGame();
+      if (panel.dataset.tutorial === 'true') {
+        if (tutorialStep < TUTORIAL_STEPS.length - 1) advanceTutorial(1);
+        else startGame();
+      } else if (state === 'intro' || state === 'menu' || state === 'over' || state === 'won') startGame();
       else if (state === 'playing') pauseGame();
       else if (state === 'paused') resumeGame();
       return;
     }
 
     if (key === 'Escape' || key === 'p' || key === 'P') {
+      if (key === 'Escape' && panel.dataset.tutorial === 'true') {
+        e.preventDefault();
+        exitTutorial();
+        return;
+      }
       if (state === 'playing' || state === 'paused') {
         e.preventDefault();
         togglePause();
@@ -1234,6 +1560,10 @@
     const action = btn.dataset.action;
     if (action === 'start') startGame();
     else if (action === 'resume') resumeGame();
+    else if (action === 'tutorial-open') openTutorial();
+    else if (action === 'tutorial-next') advanceTutorial(1);
+    else if (action === 'tutorial-prev') advanceTutorial(-1);
+    else if (action === 'tutorial-exit') exitTutorial();
   });
 
   pauseBtn.addEventListener('click', () => {
@@ -1254,10 +1584,10 @@
 
   fitCanvas();
   resetRun();
-  state = 'menu';
+  state = readStore(STORE_INTRO, '0') === '1' ? 'menu' : 'intro';
   updateMuteBtn();
   updateControls();
-  showOverlay('menu');
+  showOverlay(state);
   lastFrame = performance.now();
   requestAnimationFrame(loop);
 })();
@@ -1265,7 +1595,7 @@
 
 
 <script>
-/* 🐱 猫咪助手 + 设置菜单 —— 纯附加模块，不修改原有游戏逻辑 */
+/* 🐱 고양이 도우미와 설정 메뉴: 기존 게임 로직과 분리된 추가 기능 */
 (() => {
   "use strict";
 
@@ -1334,7 +1664,7 @@ const CAT_IMG = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAHgAAABoCAYAAAA6s
     #catSetBtn:active{transform:scale(.97)}
     #catModal{position:fixed;inset:0;z-index:50;display:grid;place-items:center;padding:20px;background:rgba(6,10,18,.72);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
     #catModal[hidden]{display:none}
-    #catCard{width:100%;max-width:330px;border-radius:22px;padding:20px;border:1px solid rgba(148,163,184,.2);background:#0b1220;box-shadow:0 26px 60px rgba(0,0,0,.6)}
+    #catCard{width:100%;max-width:360px;max-height:calc(100dvh - 40px);overflow-y:auto;border-radius:22px;padding:20px;border:1px solid rgba(148,163,184,.2);background:#0b1220;box-shadow:0 26px 60px rgba(0,0,0,.6)}
     #catCard h3{margin:0 0 4px;font-size:19px;font-weight:900;color:#e2e8f0}
     #catCard .sub{margin:0 0 14px;font-size:11.5px;color:#94a3b8;line-height:1.5}
     .catRow{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 0;border-top:1px solid rgba(148,163,184,.14)}
@@ -1351,7 +1681,7 @@ const CAT_IMG = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAHgAAABoCAYAAAA6s
   dock.id = "catDock";
   dock.dataset.mood = "default";
   dock.innerHTML = "<div id=catFace><img id=catImgFull src=" + CAT_IMG_FULL + " alt=cat><img id=catImg src=" + CAT_IMG + " alt=cat>" + CAT_FACES + "</div><div id=catBubble></div>";
-  stage.appendChild(dock);
+  document.body.appendChild(dock);
   const bubble = dock.querySelector("#catBubble");
 
   let bubbleTimer = null;
@@ -1387,10 +1717,11 @@ const CAT_IMG = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAHgAAABoCAYAAAA6s
 
   function injectSettingsButton() {
     if (!panel.isConnected || panel.querySelector("#catSetBtn")) return;
+    if (panel.querySelector("[data-intro]") || panel.dataset.tutorial === "true") return;
     const btn = document.createElement("button");
     btn.type = "button";
     btn.id = "catSetBtn";
-    btn.textContent = "🐱 猫咪助手 / 设置";
+    btn.textContent = "🐱 고양이 도우미 / 설정";
     btn.addEventListener("click", openSettings);
     panel.appendChild(btn);
   }
@@ -1400,14 +1731,14 @@ const CAT_IMG = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAHgAAABoCAYAAAA6s
   modal.hidden = true;
   modal.innerHTML =
     "<div id=catCard>" +
-      "<h3>🐱 猫咪助手</h3>" +
-      "<p class=sub>我会陪你玩，并在关键时机提醒你。设置自动保存在本机。</p>" +
-      "<div class=catRow><div><span>助手</span><small>关掉后猫咪不再出现</small></div><div class=catSeg data-set=cat></div></div>" +
-      "<div class=catRow><div><span>话痨程度</span><small>提示的频率</small></div><div class=catSeg data-set=chatter></div></div>" +
+      "<h3>🐱 고양이 도우미 설정</h3>" +
+      "<p class=sub>게임을 함께하고 중요한 순간에 알려드려요. 설정은 이 기기에 자동 저장됩니다.</p>" +
+      "<div class=catRow><div><span>도우미</span><small>끄면 고양이가 나타나지 않습니다</small></div><div class=catSeg data-set=cat></div></div>" +
+      "<div class=catRow><div><span>수다 정도</span><small>안내 메시지 빈도</small></div><div class=catSeg data-set=chatter></div></div>" +
       "<div class=catRow><div><span>언어 / Language</span><small>한국어, English 또는 둘 다</small></div><div class=catSeg data-set=language></div></div>" +
-      "<div class=catRow><div><span>方向键盘</span><small>屏幕下方的 D-pad</small></div><div class=catSeg data-set=dpad></div></div>" +
-      "<div class=catRow><div><span>音效</span><small>等同右上角喇叭按钮</small></div><div class=catSeg data-set=sound></div></div>" +
-      "<button type=button id=catClose>关闭</button>" +
+      "<div class=catRow><div><span>화면 방향 패드</span><small>화면 아래에 표시되는 조작 버튼</small></div><div class=catSeg data-set=dpad></div></div>" +
+      "<div class=catRow><div><span>효과음</span><small>오른쪽 위 스피커 버튼과 연동됩니다</small></div><div class=catSeg data-set=sound></div></div>" +
+      "<button type=button id=catClose>닫기</button>" +
     "</div>";
   document.body.appendChild(modal);
 
@@ -1441,10 +1772,10 @@ const CAT_IMG = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAHgAAABoCAYAAAA6s
   }
 
   function renderSettings() {
-    seg(modal.querySelector("[data-set=cat]"), [["1", "开"], ["0", "关"]], catOn ? "1" : "0",
+    seg(modal.querySelector("[data-set=cat]"), [["1", "켜기"], ["0", "끄기"]], catOn ? "1" : "0",
       (v) => { catOn = v === "1"; save(K_CAT, v); applyCat(); });
     seg(modal.querySelector("[data-set=chatter]"),
-      [["quiet", "安静"], ["normal", "普通"], ["chatty", "话痨"]], chatter,
+      [["quiet", "조용히"], ["normal", "보통"], ["chatty", "수다쟁이"]], chatter,
       (v) => { chatter = v; save(K_CHAT, v); });
     seg(modal.querySelector("[data-set=language]"),
       [["ko", "한국어"], ["en", "EN"], ["both", "둘 다"]], assistantLanguage,
@@ -1453,9 +1784,9 @@ const CAT_IMG = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAHgAAABoCAYAAAA6s
         save(K_LANG, v);
         if (bubble.classList.contains("on")) bubble.textContent = formatMessage(currentMessage);
       });
-    seg(modal.querySelector("[data-set=dpad]"), [["1", "显示"], ["0", "隐藏"]], dpadOn ? "1" : "0",
+    seg(modal.querySelector("[data-set=dpad]"), [["1", "표시"], ["0", "숨김"]], dpadOn ? "1" : "0",
       (v) => { dpadOn = v === "1"; save(K_DPAD, v); applyDpad(); });
-    seg(modal.querySelector("[data-set=sound]"), [["on", "开"], ["off", "关"]],
+    seg(modal.querySelector("[data-set=sound]"), [["on", "켜기"], ["off", "끄기"]],
       isMuted() ? "off" : "on", () => { if (muteBtn) muteBtn.click(); });
   }
 
@@ -1494,7 +1825,9 @@ const CAT_IMG = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAHgAAABoCAYAAAA6s
   function onOverlay() {
     if (overlay.hidden) return;
     const t = panel.textContent || "";
-    if (t.indexOf("GAME OVER") >= 0) {
+    if (panel.querySelector("[data-intro]")) {
+      say("내 소개를 읽어줘서 고마워요! 준비되면 같이 놀아요.\nThanks for reading my intro! Let's play when you're ready.", "happy", true);
+    } else if (t.indexOf("GAME OVER") >= 0) {
       if (t.indexOf("신기록") >= 0) say("신기록이에요! 정말 대단해요 🏆\nNew high score! You're amazing! 🏆", "love", true);
       else say("괜찮아요. 다시 해봐요! 몸에 부딪히지 않게 조심해요.\nThat's okay. Try again! Be careful not to run into yourself.", "sad", true);
     } else if (t.indexOf("PERFECT") >= 0) {
@@ -1579,6 +1912,153 @@ const CAT_IMG = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAHgAAABoCAYAAAA6s
   enableDrag();
   onOverlay();
   injectSettingsButton();
+})();
+</script>
+<script>
+(() => {
+  "use strict";
+
+  const slides = [
+    {
+      label: "PROJECT INTRODUCTION",
+      title: "NEON SNAKE",
+      subtitle: "설치 없이 바로 즐기는 네온 스네이크",
+      groups: [
+        { title: "EAT · GROW · GLOW", text: "먹고, 성장하고, 빛나는 한 판을 시작해 보세요." },
+        { title: "게임 소개", text: "네온 먹이를 먹고 콤보와 점수를 쌓아, 점점 빨라지는 도전에서 최고 기록에 도전하세요." },
+        { title: "단일 파일 웹 게임", text: "HTML, CSS, JavaScript를 한 페이지에 담았습니다." },
+        { title: "설치 없이 플레이", text: "index.html을 브라우저에서 열면 바로 시작할 수 있습니다." },
+        { title: "모바일 조작 지원", text: "키보드와 터치 조작을 모두 지원합니다." },
+        { title: "ARCADE MODE · SCORE 120", text: "클릭할 때마다 뱀의 몸통이 파도처럼 한 칸씩 움직이는 표지도 확인해 보세요. 🟢 🟢 🟢 🟢 🟢 🟢" }
+      ]
+    },
+    {
+      label: "01 / 플레이 경험",
+      title: "쉬운 규칙, 점점 높아지는 도전",
+      subtitle: "규칙은 간단하고 난이도는 점차 올라갑니다. 키보드와 터치 조작을 모두 지원합니다.",
+      groups: [
+        { title: "01 · 먹이를 먹고 성장", text: "먹이를 먹으면 점수를 얻고 몸이 길어집니다." },
+        { title: "먹이 종류", text: "🍩  🍕  🧋  🍓  💎  ⭐" },
+        { title: "콤보 규칙", text: "2.6초 안에 연속으로 먹으면 콤보가 최대 x5까지 증가합니다." },
+        { title: "콤보 보너스", text: "한 번에 최대 50점! 레벨이 오를수록 속도도 빨라집니다." },
+        { title: "02 · 몬스터 피하기", text: "점수 100점부터 몬스터가 등장합니다." },
+        { title: "몬스터 등장", text: "👾 100점부터 등장" },
+        { title: "점점 늘어나는 위협", text: "100점마다 한 마리씩 추가되어 최대 3마리까지 늘어납니다." },
+        { title: "충돌 규칙", text: "몸이나 몬스터에 부딪히면 몸이 짧아지지만 도전은 계속됩니다. 벽에 부딪히면 게임이 끝납니다." },
+        { title: "03 · 언제든 바로 플레이", text: "복잡한 준비 없이 바로 시작할 수 있습니다." },
+        { title: "키보드", text: "방향키 / WASD" },
+        { title: "모바일", text: "스와이프 또는 화면 방향 패드" },
+        { title: "플레이 편의 기능", text: "일시정지, 효과음, 진동을 지원합니다." },
+        { title: "최고 기록 저장", text: "최고 점수는 현재 브라우저에 저장됩니다." }
+      ]
+    },
+    {
+      label: "02 / 게임을 위해 설계",
+      title: "작지만 완성도 높은 경험",
+      subtitle: "설치나 빌드 과정 없이 브라우저에서 실행됩니다. 핵심 플레이와 편의 기능을 한 페이지에 담았습니다.",
+      groups: [
+        { title: "01 · 단일 파일로 제공", text: "HTML / CSS / JavaScript를 index.html 하나에 통합" },
+        { title: "02 · Canvas 기반 게임 화면", text: "네온 뱀·격자·먹이·몬스터·파티클 효과" },
+        { title: "03 · 브라우저 기본 기능 활용", text: "WebAudio 효과음 + localStorage에 최고 기록과 설정 저장" },
+        { title: "🐱 플레이에 반응하는 고양이 도우미", text: "먹이·콤보·레벨업·몬스터·신기록 순간에 표정으로 반응합니다." },
+        { title: "실시간 공략 팁", text: "80점 전후 몬스터를 예고하고, 100점마다 추가 알림과 상황별 팁을 제공합니다." },
+        { title: "취향에 맞게 설정", text: "한국어·영어·이중 언어, 말수와 도우미 켜기/끄기를 설정하고 고양이 위치도 드래그할 수 있습니다." },
+        { title: "모바일 지원 · 감사합니다", text: "스와이프 · 방향 패드 · 진동 피드백\nindex.html을 열어 바로 시작하세요!" }
+      ]
+    }
+  ];
+
+  const openButton = document.getElementById("projectPptButton");
+  const viewer = document.getElementById("pptViewer");
+  const content = document.getElementById("pptContent");
+  const progress = document.getElementById("pptProgress");
+  const prevButton = document.getElementById("pptPrevButton");
+  const nextButton = document.getElementById("pptNextButton");
+  const closeButton = document.getElementById("pptCloseButton");
+  if (!openButton || !viewer || !content || !progress || !prevButton || !nextButton || !closeButton) return;
+
+  let slideIndex = 0;
+  let revealed = 0;
+  let previousFocus = null;
+
+  function render() {
+    const slide = slides[slideIndex];
+    const visibleGroups = slide.groups.slice(0, revealed);
+    content.innerHTML =
+      `<p class="ppt-slide-label">${slide.label}</p>` +
+      `<h2>${slide.title}</h2>` +
+      `<p class="ppt-subtitle">${slide.subtitle}</p>` +
+      `<div class="ppt-reveals">${visibleGroups.map(group =>
+        `<article class="ppt-item"><strong>${group.title}</strong><p>${group.text}</p></article>`
+      ).join("")}</div>`;
+
+    progress.textContent = `슬라이드 ${slideIndex + 1} / ${slides.length} · 클릭 공개 ${revealed} / ${slide.groups.length}`;
+    prevButton.disabled = slideIndex === 0 && revealed === 0;
+    nextButton.textContent = revealed < slide.groups.length
+      ? "다음 내용 ▶"
+      : (slideIndex < slides.length - 1 ? "다음 슬라이드 ▶" : "소개 끝내기");
+  }
+
+  function openViewer() {
+    previousFocus = document.activeElement;
+    slideIndex = 0;
+    revealed = 0;
+    render();
+    viewer.hidden = false;
+    closeButton.focus();
+  }
+
+  function closeViewer() {
+    viewer.hidden = true;
+    if (previousFocus && typeof previousFocus.focus === "function") previousFocus.focus();
+  }
+
+  function next() {
+    const slide = slides[slideIndex];
+    if (revealed < slide.groups.length) {
+      revealed++;
+    } else if (slideIndex < slides.length - 1) {
+      slideIndex++;
+      revealed = 0;
+    } else {
+      closeViewer();
+      return;
+    }
+    render();
+    content.scrollTop = content.scrollHeight;
+  }
+
+  function previous() {
+    if (revealed > 0) {
+      revealed--;
+    } else if (slideIndex > 0) {
+      slideIndex--;
+      revealed = slides[slideIndex].groups.length;
+    }
+    render();
+    content.scrollTop = 0;
+  }
+
+  openButton.addEventListener("click", openViewer);
+  closeButton.addEventListener("click", closeViewer);
+  nextButton.addEventListener("click", next);
+  prevButton.addEventListener("click", previous);
+  viewer.addEventListener("pointerdown", (event) => {
+    if (event.target === viewer) closeViewer();
+  });
+  viewer.addEventListener("keydown", (event) => {
+    event.stopPropagation();
+    if (event.key === "Escape") {
+      event.preventDefault();
+      closeViewer();
+    } else if (event.key === "ArrowRight") {
+      event.preventDefault();
+      next();
+    } else if (event.key === "ArrowLeft") {
+      event.preventDefault();
+      previous();
+    }
+  });
 })();
 </script>
 </body>
