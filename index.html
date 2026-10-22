@@ -499,6 +499,132 @@
   }
   .ppt-toolbar button:hover, .ppt-footer button:hover, .ppt-footer a:hover { background: rgba(255, 255, 255, .1); }
   .ppt-content { overflow: auto; padding: clamp(18px, 4vw, 34px); }
+  .ppt-story-scene {
+    position: relative;
+    flex: 0 0 124px;
+    overflow: hidden;
+    margin: 16px 18px 0;
+    border: 1px solid rgba(34, 211, 238, .2);
+    border-radius: 18px;
+    transition: background 1s ease, border-color 1s ease;
+    background:
+      radial-gradient(ellipse at 50% 115%, #164e63 0 22%, transparent 23%),
+      radial-gradient(ellipse at 15% 125%, #14532d 0 30%, transparent 31%),
+      radial-gradient(ellipse at 85% 125%, #166534 0 34%, transparent 35%),
+      linear-gradient(180deg, #101b3a 0%, #312e81 62%, #14532d 100%);
+  }
+  .ppt-story-scene[data-time="morning"] {
+    border-color: rgba(251, 191, 36, .35);
+    background:
+      radial-gradient(ellipse at 50% 112%, #fbbf24 0 8%, rgba(251, 191, 36, .55) 9%, transparent 34%),
+      radial-gradient(ellipse at 50% 115%, #0e7490 0 22%, transparent 23%),
+      radial-gradient(ellipse at 15% 125%, #15803d 0 30%, transparent 31%),
+      radial-gradient(ellipse at 85% 125%, #16a34a 0 34%, transparent 35%),
+      linear-gradient(180deg, #60a5fa 0%, #bae6fd 55%, #fdba74 100%);
+  }
+  .ppt-story-scene[data-time="afternoon"] {
+    border-color: rgba(56, 189, 248, .42);
+    background:
+      radial-gradient(ellipse at 50% 115%, #0e7490 0 22%, transparent 23%),
+      radial-gradient(ellipse at 15% 125%, #15803d 0 30%, transparent 31%),
+      radial-gradient(ellipse at 85% 125%, #16a34a 0 34%, transparent 35%),
+      linear-gradient(180deg, #0284c7 0%, #38bdf8 57%, #bae6fd 100%);
+  }
+  .ppt-story-scene[data-time="evening"] {
+    border-color: rgba(167, 139, 250, .36);
+    background:
+      radial-gradient(ellipse at 50% 115%, #164e63 0 22%, transparent 23%),
+      radial-gradient(ellipse at 15% 125%, #14532d 0 30%, transparent 31%),
+      radial-gradient(ellipse at 85% 125%, #166534 0 34%, transparent 35%),
+      linear-gradient(180deg, #312e81 0%, #7c3aed 42%, #f97316 100%);
+  }
+  .ppt-story-scene[data-time="evening"]::after {
+    position: absolute;
+    z-index: 2;
+    bottom: 21px;
+    left: 74%;
+    width: 54px;
+    height: 17px;
+    content: "";
+    background: linear-gradient(155deg, #86efac 0%, #22c55e 36%, #15803d 100%);
+    clip-path: polygon(0 100%, 8% 68%, 15% 100%, 27% 27%, 36% 100%, 49% 0, 58% 100%, 73% 35%, 81% 100%, 94% 69%, 100% 100%);
+    filter: drop-shadow(0 0 3px rgba(74, 222, 128, .35));
+  }
+  .ppt-story-scene::before {
+    position: absolute;
+    inset: 0;
+    content: "";
+    background-image:
+      radial-gradient(circle, #fff 1px, transparent 1.7px),
+      radial-gradient(circle, #a5f3fc 1px, transparent 1.8px);
+    background-position: 15px 18px, 42px 39px;
+    background-size: 73px 53px, 97px 67px;
+    transition: opacity 1s ease;
+  }
+  .ppt-story-scene[data-time="morning"]::before,
+  .ppt-story-scene[data-time="afternoon"]::before { opacity: 0; }
+  .ppt-story-scene[data-time="evening"]::before {
+    opacity: .9;
+    animation: story-twinkle 2.4s ease-in-out infinite alternate;
+    -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 48%, transparent 72%);
+    mask-image: linear-gradient(to bottom, #000 0%, #000 48%, transparent 72%);
+  }
+  .ppt-story-celestial, .ppt-story-cloud, .ppt-story-snake, .ppt-story-sparkle {
+    position: absolute;
+    z-index: 1;
+    user-select: none;
+  }
+  .ppt-story-celestial {
+    top: 50%;
+    font-size: 27px;
+    line-height: 1;
+    transform: translate(-50%, -50%);
+    transition: opacity .5s ease;
+  }
+  .ppt-story-sun {
+    top: 25%;
+    left: 82%;
+    opacity: .98;
+    filter: drop-shadow(0 0 14px rgba(253, 224, 71, .95));
+  }
+  .ppt-story-moon {
+    top: 13px;
+    right: 12%;
+    opacity: .7;
+    transform: none;
+    filter: drop-shadow(0 0 12px rgba(253, 230, 138, .75));
+  }
+  .ppt-story-cloud { top: 29px; left: 34%; font-size: 25px; opacity: .8; animation: story-cloud-drift 7s ease-in-out infinite alternate; }
+  .ppt-story-path {
+    position: absolute;
+    right: 7%;
+    bottom: -21px;
+    left: 7%;
+    height: 53px;
+    border: 2px dashed rgba(253, 230, 138, .48);
+    border-bottom: 0;
+    border-radius: 50% 50% 0 0;
+  }
+  .ppt-story-snake {
+    z-index: 3;
+    bottom: 16px;
+    left: 8%;
+    font-size: 25px;
+    line-height: 1;
+    filter: drop-shadow(0 0 9px rgba(163, 230, 53, .85));
+    transition: left .65s cubic-bezier(.2, .8, .25, 1);
+  }
+  .ppt-story-sparkle { top: 20px; left: 12%; font-size: 16px; animation: story-sparkle 1.8s ease-in-out infinite alternate; }
+  .ppt-story-scene[data-time="morning"] .ppt-story-sun { top: 20px; left: 12%; }
+  .ppt-story-scene[data-time="afternoon"] .ppt-story-sun { top: 25%; left: 82%; }
+  .ppt-story-scene[data-time="evening"] .ppt-story-sun { display: none; }
+  .ppt-story-scene[data-time="morning"] .ppt-story-moon { opacity: .3; }
+  .ppt-story-scene[data-time="afternoon"] .ppt-story-moon { display: none; }
+  .ppt-story-scene[data-time="morning"] .ppt-story-sparkle { display: none; }
+  .ppt-story-scene[data-time="afternoon"] .ppt-story-sparkle { display: none; }
+  @keyframes story-twinkle { from { opacity: .35; } to { opacity: .9; } }
+  @keyframes story-cloud-drift { from { transform: translateX(-9px); } to { transform: translateX(14px); } }
+  @keyframes story-sparkle { from { transform: scale(.8) rotate(-12deg); opacity: .55; } to { transform: scale(1.15) rotate(12deg); opacity: 1; } }
   .ppt-slide-label { margin: 0 0 8px; color: #a3e635; font-size: 11px; font-weight: 800; letter-spacing: .13em; }
   .ppt-content h2 { margin: 0; color: #e2e8f0; font-size: clamp(24px, 5vw, 38px); line-height: 1.15; }
   .ppt-subtitle { margin: 10px 0 22px; color: #94a3b8; font-size: 14px; line-height: 1.6; }
@@ -511,6 +637,16 @@
     background: linear-gradient(145deg, rgba(255, 255, 255, .055), rgba(255, 255, 255, .02));
     animation: enter-rise .3s ease both;
   }
+  .ppt-item-art {
+    display: block;
+    width: 100%;
+    height: 82px;
+    margin-bottom: 12px;
+    border: 1px solid rgba(148, 163, 184, .1);
+    border-radius: 11px;
+    background: linear-gradient(135deg, rgba(49, 46, 129, .38), rgba(8, 145, 178, .12));
+  }
+  .ppt-item-art > svg { display: block; width: 100%; height: 100%; }
   .ppt-item strong { display: block; margin-bottom: 6px; color: #22d3ee; font-size: 14px; }
   .ppt-item p { margin: 0; color: #cbd5e1; font-size: 12px; line-height: 1.65; white-space: pre-line; }
   .ppt-item .ppt-emoji { margin-bottom: 6px; font-size: 20px; }
@@ -529,8 +665,10 @@
     .ppt-window { max-height: calc(100dvh - 20px); border-radius: 18px; }
     .ppt-toolbar, .ppt-footer { padding: 10px 12px; }
     .ppt-toolbar strong { font-size: 11px; }
+    .ppt-story-scene { flex-basis: 100px; margin: 12px 12px 0; }
     .ppt-reveals { grid-template-columns: 1fr; }
     .ppt-item { padding: 13px; }
+    .ppt-item-art { height: 76px; }
     .ppt-progress { font-size: 10px; }
   }
 
@@ -591,6 +729,14 @@
       <strong id="pptViewerTitle">NEON SNAKE · 프로젝트 소개</strong>
       <button type="button" id="pptCloseButton" aria-label="소개 닫기">닫기 ✕</button>
     </header>
+    <div class="ppt-story-scene" aria-hidden="true">
+      <span class="ppt-story-celestial ppt-story-sun" id="pptStorySun">☀️</span>
+      <span class="ppt-story-celestial ppt-story-moon" id="pptStoryMoon">🌙</span>
+      <span class="ppt-story-cloud">☁️</span>
+      <span class="ppt-story-sparkle">✨</span>
+      <span class="ppt-story-path"></span>
+      <span class="ppt-story-snake" id="pptStorySnake">🐍</span>
+    </div>
     <div class="ppt-content" id="pptContent" aria-live="polite"></div>
     <footer class="ppt-footer">
       <span class="ppt-progress" id="pptProgress" aria-live="polite"></span>
@@ -1924,12 +2070,12 @@ const CAT_IMG = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAHgAAABoCAYAAAA6s
       title: "NEON SNAKE",
       subtitle: "설치 없이 바로 즐기는 네온 스네이크",
       groups: [
-        { title: "EAT · GROW · GLOW", text: "먹고, 성장하고, 빛나는 한 판을 시작해 보세요." },
-        { title: "게임 소개", text: "네온 먹이를 먹고 콤보와 점수를 쌓아, 점점 빨라지는 도전에서 최고 기록에 도전하세요." },
-        { title: "단일 파일 웹 게임", text: "HTML, CSS, JavaScript를 한 페이지에 담았습니다." },
-        { title: "설치 없이 플레이", text: "index.html을 브라우저에서 열면 바로 시작할 수 있습니다." },
-        { title: "모바일 조작 지원", text: "키보드와 터치 조작을 모두 지원합니다." },
-        { title: "ARCADE MODE · SCORE 120", text: "클릭할 때마다 뱀의 몸통이 파도처럼 한 칸씩 움직이는 표지도 확인해 보세요. 🟢 🟢 🟢 🟢 🟢 🟢" }
+        { title: "EAT · GROW · GLOW", text: "먹고, 성장하고, 빛나는 한 판을 시작해 보세요.", illustration: "eat" },
+        { title: "게임 소개", text: "네온 먹이를 먹고 콤보와 점수를 쌓아, 점점 빨라지는 도전에서 최고 기록에 도전하세요.", illustration: "game" },
+        { title: "단일 파일 웹 게임", text: "HTML, CSS, JavaScript를 한 페이지에 담았습니다.", illustration: "file" },
+        { title: "설치 없이 플레이", text: "index.html을 브라우저에서 열면 바로 시작할 수 있습니다.", illustration: "browser" },
+        { title: "모바일 조작 지원", text: "키보드와 터치 조작을 모두 지원합니다.", illustration: "mobile" },
+        { title: "ARCADE MODE · SCORE 120", text: "클릭할 때마다 뱀의 몸통이 파도처럼 한 칸씩 움직이는 표지도 확인해 보세요. 🟢 🟢 🟢 🟢 🟢 🟢", illustration: "arcade" }
       ]
     },
     {
@@ -1972,27 +2118,44 @@ const CAT_IMG = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAHgAAABoCAYAAAA6s
   const viewer = document.getElementById("pptViewer");
   const content = document.getElementById("pptContent");
   const progress = document.getElementById("pptProgress");
+  const storyScene = document.querySelector(".ppt-story-scene");
+  const storySnake = document.getElementById("pptStorySnake");
   const prevButton = document.getElementById("pptPrevButton");
   const nextButton = document.getElementById("pptNextButton");
   const closeButton = document.getElementById("pptCloseButton");
-  if (!openButton || !viewer || !content || !progress || !prevButton || !nextButton || !closeButton) return;
+  if (!openButton || !viewer || !content || !progress || !storyScene || !storySnake || !prevButton || !nextButton || !closeButton) return;
 
   let slideIndex = 0;
   let revealed = 0;
   let previousFocus = null;
 
+  function illustrationFor(kind) {
+    const art = {
+      eat: `<svg viewBox="0 0 320 100" aria-hidden="true" focusable="false"><path d="M35 57h22q10-23 24 0h18q10-23 24 0h18" fill="none" stroke="#a3e635" stroke-linecap="round" stroke-width="12"/><circle cx="35" cy="57" r="12" fill="#bef264"/><circle cx="38" cy="54" r="2" fill="#172554"/><path d="M201 39c17-20 46-5 42 17-4 23-31 27-43 9-7-10-7-17 1-26Z" fill="#fb7185" stroke="#fecdd3" stroke-width="3"/><circle cx="221" cy="53" r="4" fill="#fef08a"/><path d="M226 34l6-10m13 36 12-3m-49-12-9-8" stroke="#fde68a" stroke-linecap="round" stroke-width="3"/><path d="m279 25 4 9 10 2-8 6 1 10-7-6-9 4 4-9-6-7 10 1Z" fill="#22d3ee"/></svg>`,
+      game: `<svg viewBox="0 0 320 100" aria-hidden="true" focusable="false"><rect x="103" y="12" width="116" height="76" rx="10" fill="#0f172a" stroke="#22d3ee" stroke-width="3"/><path d="M113 29h96M113 46h96M113 63h96M136 18v63m24-63v63m24-63v63" stroke="#334155" stroke-width="1.5"/><path d="M124 72h18V55h18V38h18" fill="none" stroke="#a3e635" stroke-linecap="round" stroke-linejoin="round" stroke-width="8"/><circle cx="190" cy="29" r="5" fill="#fb7185"/><path d="M62 37h16m-8-8v16m170 28h16m-8-8v16" stroke="#fde68a" stroke-linecap="round" stroke-width="3"/><path d="M49 69c12-16 27-16 39 0" fill="none" stroke="#c4b5fd" stroke-width="4"/></svg>`,
+      file: `<svg viewBox="0 0 320 100" aria-hidden="true" focusable="false"><path d="M126 12h48l24 24v48a5 5 0 0 1-5 5h-67a5 5 0 0 1-5-5V17a5 5 0 0 1 5-5Z" fill="#1e293b" stroke="#a5b4fc" stroke-width="3"/><path d="M174 13v24h23" fill="#334155" stroke="#a5b4fc" stroke-width="3"/><path d="m145 51-10 10 10 10m34-20 10 10-10 10m-8-14-6 14" fill="none" stroke="#22d3ee" stroke-linecap="round" stroke-linejoin="round" stroke-width="4"/><circle cx="91" cy="28" r="6" fill="#fb7185"/><circle cx="222" cy="68" r="5" fill="#a3e635"/><path d="M66 76h30m130-48h24" stroke="#64748b" stroke-linecap="round" stroke-width="3"/></svg>`,
+      browser: `<svg viewBox="0 0 320 100" aria-hidden="true" focusable="false"><rect x="77" y="18" width="166" height="64" rx="9" fill="#0f172a" stroke="#22d3ee" stroke-width="3"/><path d="M78 35h164" stroke="#475569" stroke-width="3"/><circle cx="91" cy="27" r="3" fill="#fb7185"/><circle cx="102" cy="27" r="3" fill="#fbbf24"/><circle cx="113" cy="27" r="3" fill="#a3e635"/><rect x="129" y="23" width="79" height="8" rx="4" fill="#334155"/><path d="M159 48v21m-9-9 9 9 9-9" fill="none" stroke="#a3e635" stroke-linecap="round" stroke-linejoin="round" stroke-width="4"/><path d="M143 74h32" stroke="#22d3ee" stroke-linecap="round" stroke-width="3"/><path d="M57 50h12m182 0h12" stroke="#fde68a" stroke-linecap="round" stroke-width="3"/></svg>`,
+      mobile: `<svg viewBox="0 0 320 100" aria-hidden="true" focusable="false"><rect x="128" y="8" width="64" height="84" rx="12" fill="#0f172a" stroke="#c4b5fd" stroke-width="3"/><rect x="135" y="20" width="50" height="59" rx="4" fill="#172554"/><path d="M147 36h11v-9m15 9h-11v-9m-15 28h11v9m15-9h-11v9" fill="none" stroke="#22d3ee" stroke-linecap="round" stroke-linejoin="round" stroke-width="3"/><circle cx="160" cy="85" r="3" fill="#94a3b8"/><path d="M100 39c-8 6-8 16 0 22m-8-30c-16 12-16 29 0 41m128-33c8 6 8 16 0 22m8-30c16 12 16 29 0 41" fill="none" stroke="#a3e635" stroke-linecap="round" stroke-width="3"/><circle cx="160" cy="49" r="5" fill="#fb7185"/></svg>`,
+      arcade: `<svg viewBox="0 0 320 100" aria-hidden="true" focusable="false"><path d="M119 82V19q0-7 7-7h68q7 0 7 7v63h-16V60h-50v22Z" fill="#312e81" stroke="#a5b4fc" stroke-width="3"/><rect x="131" y="21" width="58" height="32" rx="4" fill="#07111f" stroke="#22d3ee" stroke-width="2"/><text x="160" y="43" text-anchor="middle" fill="#a3e635" font-family="monospace" font-size="17" font-weight="700">120</text><path d="M137 69h13l9-8 10 8 9-8h5" fill="none" stroke="#a3e635" stroke-linecap="round" stroke-linejoin="round" stroke-width="5"/><circle cx="147" cy="85" r="3" fill="#fb7185"/><circle cx="178" cy="85" r="3" fill="#fbbf24"/><path d="M84 38h14m-7-7v14m133 15h14m-7-7v14" stroke="#fde68a" stroke-linecap="round" stroke-width="3"/></svg>`
+    };
+    return art[kind] || "";
+  }
+
   function render() {
     const slide = slides[slideIndex];
-    const visibleGroups = slide.groups.slice(0, revealed);
+    const sceneTime = ["morning", "afternoon", "evening"][slideIndex];
+    storyScene.dataset.time = sceneTime;
+    const visibleGroups = revealed > 0 ? [slide.groups[revealed - 1]] : [];
     content.innerHTML =
       `<p class="ppt-slide-label">${slide.label}</p>` +
       `<h2>${slide.title}</h2>` +
       `<p class="ppt-subtitle">${slide.subtitle}</p>` +
       `<div class="ppt-reveals">${visibleGroups.map(group =>
-        `<article class="ppt-item"><strong>${group.title}</strong><p>${group.text}</p></article>`
+        `<article class="ppt-item">${group.illustration ? `<div class="ppt-item-art" role="img" aria-label="${group.title} 그림">${illustrationFor(group.illustration)}</div>` : ""}<strong>${group.title}</strong><p>${group.text}</p></article>`
       ).join("")}</div>`;
 
-    progress.textContent = `슬라이드 ${slideIndex + 1} / ${slides.length} · 클릭 공개 ${revealed} / ${slide.groups.length}`;
+    progress.textContent = `슬라이드 ${slideIndex + 1} / ${slides.length} · 장면 ${revealed} / ${slide.groups.length}`;
+    storySnake.style.left = `${8 + (revealed / slide.groups.length) * 76}%`;
     prevButton.disabled = slideIndex === 0 && revealed === 0;
     nextButton.textContent = revealed < slide.groups.length
       ? "다음 내용 ▶"
@@ -2059,6 +2222,7 @@ const CAT_IMG = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAHgAAABoCAYAAAA6s
       previous();
     }
   });
+  openViewer();
 })();
 </script>
 </body>
